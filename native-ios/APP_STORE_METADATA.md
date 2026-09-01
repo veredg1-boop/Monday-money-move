@@ -1,0 +1,43 @@
+# Monday Money Move — App Store Listing Draft
+
+## App name
+Monday Money Move
+
+## Subtitle
+One smarter move each week
+
+## Promotional text
+Turn financial overwhelm into one clear, manageable action in about a minute.
+
+## Description
+Monday Money Move helps you focus on the next financial action that matters most.
+
+Complete a quick weekly check-in, choose what you want to improve, and receive one focused money move for the week. Save your move, mark it complete, review your history, and build momentum through small, consistent decisions.
+
+Features:
+- One-minute weekly money check-in
+- Focused actions for debt, savings, spending, and investing
+- Weekly progress history
+- Monday reminders
+- Private on-device storage
+- Clear educational guidance without jargon
+
+Monday Money Move provides general educational guidance only. It does not provide individualized financial, investment, tax, legal, accounting, or credit advice.
+
+## Keywords
+money,weekly,budget,savings,debt,spending,investing,goals,habits,finance
+
+## Category
+Primary: Finance
+Secondary: Productivity
+
+## Support URL
+To be created on the company domain.
+
+## Privacy Policy URL
+To be moved to the company domain.
+
+## Subscription
+Product ID: com.mondaymoneymove.monthly
+Display name: Monday Money Move Monthly
+Price target: $9.99/month
