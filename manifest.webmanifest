@@ -1,1 +1,17 @@
-{"name":"Monday Money Move","short_name":"Money Move","description":"One smart money decision every week.","start_url":"./index.html","display":"standalone","background_color":"#f5f5f7","theme_color":"#111111"}
+{
+  "name": "Monday Money Move",
+  "short_name": "Money Move",
+  "description": "One smart money decision every week.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f5f7",
+  "theme_color": "#16352f",
+  "icons": [
+    {
+      "src": "brand/app-icon-master.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
