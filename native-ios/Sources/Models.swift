@@ -33,6 +33,10 @@ final class MoveStore: ObservableObject {
         moves[0].completed = true
     }
 
+    func clearAll() {
+        moves = []
+    }
+
     private func save() {
         if let data = try? JSONEncoder().encode(moves) {
             UserDefaults.standard.set(data, forKey: key)
@@ -59,6 +63,8 @@ final class MoveStore: ObservableObject {
 final class PurchaseManager: ObservableObject {
     @Published var monthlyProduct: Product?
     @Published var isSubscribed = false
+    @Published var isWorking = false
+    @Published var statusMessage: String?
     private let productID = "com.mondaymoneymove.monthly"
 
     func loadProducts() async {
@@ -67,12 +73,44 @@ final class PurchaseManager: ObservableObject {
     }
 
     func purchase() async {
-        guard let product = monthlyProduct else { return }
-        guard let result = try? await product.purchase() else { return }
-        if case .success(let verification) = result,
-           case .verified(let transaction) = verification {
-            await transaction.finish()
-            isSubscribed = true
+        guard let product = monthlyProduct else {
+            statusMessage = "The subscription is temporarily unavailable. Please try again."
+            return
+        }
+        isWorking = true
+        defer { isWorking = false }
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                guard case .verified(let transaction) = verification else {
+                    statusMessage = "Apple could not verify this purchase."
+                    return
+                }
+                await transaction.finish()
+                await refreshStatus()
+                statusMessage = isSubscribed ? "Membership activated." : nil
+            case .pending:
+                statusMessage = "Your purchase is waiting for Apple’s approval."
+            case .userCancelled:
+                statusMessage = nil
+            @unknown default:
+                statusMessage = "The purchase could not be completed."
+            }
+        } catch {
+            statusMessage = "The purchase could not be completed. Please try again."
+        }
+    }
+
+    func restore() async {
+        isWorking = true
+        defer { isWorking = false }
+        do {
+            try await AppStore.sync()
+            await refreshStatus()
+            statusMessage = isSubscribed ? "Your membership has been restored." : "No active membership was found."
+        } catch {
+            statusMessage = "We couldn’t restore purchases. Please try again."
         }
     }
 
