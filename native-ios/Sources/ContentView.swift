@@ -8,7 +8,7 @@ struct ContentView: View {
     @State private var pace = ""
     @State private var recommendation = ""
 
-    enum Screen { case home, goal, pace, style, result, history }
+    enum Screen { case home, goal, pace, style, result, history, membership }
 
     var body: some View {
         NavigationStack {
@@ -47,6 +47,7 @@ struct ContentView: View {
         case .style: question("What kind of action would help most?", options: [("Set it up automatically","automatic"),("Take one action today","once"),("Review and make a decision","review")]) { recommendation = move(for: goal, pace: pace, style: $0); screen = .result }
         case .result: resultCard
         case .history: historyCard
+        case .membership: membershipCard
         }
     }
 
@@ -56,8 +57,14 @@ struct ContentView: View {
                 Text("FOUNDING MEMBER BETA").font(.caption.bold()).foregroundStyle(Color(red: 0.09, green: 0.31, blue: 0.24))
                 Text("Stop wondering what to do with your money next.").font(.system(size: 38, weight: .bold, design: .rounded))
                 Text("A one-minute weekly check-in that turns financial overwhelm into one clear, manageable action.").font(.title3).foregroundStyle(.secondary)
-                primaryButton("Start This Week’s Check-In") { screen = .goal }
+                primaryButton(store.moves.isEmpty || purchases.isSubscribed ? "Start This Week’s Check-In" : "Unlock This Week’s Move") {
+                    screen = store.moves.isEmpty || purchases.isSubscribed ? .goal : .membership
+                }
                 Button("Remind me every Monday") { Task { await store.requestWeeklyReminder() } }.font(.subheadline.bold())
+                if !store.moves.isEmpty {
+                    Text("\(store.completedCount) of \(store.moves.count) weekly moves completed")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                }
             }
         }
     }
@@ -105,6 +112,40 @@ struct ContentView: View {
                     Divider()
                 }
                 Button("Back") { screen = .home }
+            }
+        }
+    }
+
+    private var membershipCard: some View {
+        card {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("MONDAY MONEY MOVE MEMBERSHIP").font(.caption.bold()).foregroundStyle(.secondary)
+                Text("Keep your momentum going").font(.title.bold())
+                Text("Get a fresh, focused money move each week, save your progress, and use Monday reminders.")
+                    .font(.title3).foregroundStyle(.secondary)
+                Text(purchases.monthlyProduct?.displayPrice ?? "$9.99")
+                    .font(.system(size: 38, weight: .bold, design: .rounded))
+                + Text(" / month").font(.headline).foregroundColor(.secondary)
+                primaryButton(purchases.isWorking ? "Please wait…" : "Start Membership") {
+                    Task {
+                        await purchases.purchase()
+                        if purchases.isSubscribed { screen = .goal }
+                    }
+                }
+                .disabled(purchases.isWorking)
+                Button("Restore Purchases") { Task { await purchases.restore() } }
+                    .disabled(purchases.isWorking)
+                if let message = purchases.statusMessage {
+                    Text(message).font(.footnote).foregroundStyle(.secondary)
+                }
+                Text("Payment will be charged to your Apple Account. The subscription renews automatically unless canceled at least 24 hours before the end of the current period. Manage or cancel in Apple Account settings.")
+                    .font(.footnote).foregroundStyle(.secondary)
+                HStack(spacing: 18) {
+                    Link("Privacy", destination: URL(string: "https://veredg1-boop.github.io/Monday-money-move/privacy.html")!)
+                    Link("Terms", destination: URL(string: "https://veredg1-boop.github.io/Monday-money-move/terms.html")!)
+                    Link("Support", destination: URL(string: "https://veredg1-boop.github.io/Monday-money-move/support.html")!)
+                }.font(.footnote)
+                Button("Not now") { screen = .home }.font(.footnote)
             }
         }
     }
