@@ -24,14 +24,12 @@ button{width:100%;padding:16px 18px;margin-top:10px;border:none;border-radius:14
 <body>
 <div class="app">
   <div class="brand"><div class="logo">M</div><div><strong>Monday Money Move</strong><span>One smarter move each week</span></div></div>
-
   <section class="card" id="home">
     <div class="badge">WEEKLY MONEY DECISION APP</div>
     <h1>Make one smart money move this week.</h1>
     <p class="lead">Answer one quick question and get a simple action to focus on right now.</p>
     <button class="main" onclick="startApp()">Find My Money Move</button>
   </section>
-
   <section id="question" class="card hidden">
     <div class="eyebrow">Step 1 of 2</div>
     <h2>What matters most to you right now?</h2>
@@ -40,7 +38,6 @@ button{width:100%;padding:16px 18px;margin-top:10px;border:none;border-radius:14
     <button class="choice" onclick="result('spend')">Stop overspending</button>
     <button class="choice" onclick="result('invest')">Invest smarter</button>
   </section>
-
   <section id="answer" class="card hidden">
     <div class="eyebrow">Your Monday Money Move</div>
     <h2>Here’s your focus for this week</h2>
@@ -51,13 +48,13 @@ button{width:100%;padding:16px 18px;margin-top:10px;border:none;border-radius:14
     <button class="main" onclick="join()">Start My Membership</button>
     <p class="small">Cancel anytime. Educational guidance only; not individualized financial, investment, tax, or legal advice.</p>
   </section>
-
   <div class="footer">© 2026 Monday Money Move LLC · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></div>
 </div>
 <script>
 function startApp(){document.getElementById('question').classList.remove('hidden');document.getElementById('question').scrollIntoView({behavior:'smooth'});}
 function result(type){let text='';if(type==='debt')text='Put your next extra $100 toward your highest-interest debt.';if(type==='save')text='Automatically move money into savings before your next spending decision.';if(type==='spend')text='Choose one recurring expense to cancel, reduce, or renegotiate this week.';if(type==='invest')text='Choose a fixed investment amount and automate it instead of trying to time the market.';document.getElementById('move').innerText=text;document.getElementById('answer').classList.remove('hidden');document.getElementById('answer').scrollIntoView({behavior:'smooth'});}
 function join(){window.location.href='https://buy.stripe.com/eVq28k85t1DA8y08g9ds400';}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));}
 </script>
 </body>
 </html>
