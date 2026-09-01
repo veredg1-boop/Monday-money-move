@@ -1,4 +1,4 @@
-const CACHE='monday-money-move-v2';
+const CACHE='monday-money-move-v3';
 const ASSETS=['./','./index.html','./privacy.html','./terms.html','./success.html','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
