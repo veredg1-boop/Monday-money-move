@@ -20,7 +20,4 @@ targets:
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_NSUserNotificationsUsageDescription: Monday Money Move can remind you to complete your weekly money move.
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-    entitlements:
-      path: MondayMoneyMove.entitlements
+        TARGETED_DEVICE_FAMILY: "1,2"

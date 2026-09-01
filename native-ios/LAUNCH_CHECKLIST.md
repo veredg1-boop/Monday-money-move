@@ -14,8 +14,12 @@
 - Draft App Store title, subtitle, description, keywords, and category
 - Privacy policy, terms, and support page
 - Master brand icon artwork
+- Apple privacy manifest for UserDefaults (CA92.1)
+- iPhone and iPad target configuration
+- Removed unneeded Apple Pay entitlement from native target
 
 ## External setup required before submission
+- Generate final 1024×1024 PNG App Store icon from the master artwork and add it to an AppIcon asset catalog
 - Company-owned neutral domain
 - Company-domain email address
 - D-U-N-S Number for Monday Money Move LLC
@@ -33,4 +37,4 @@
 - Test local history persistence
 - Configure and test StoreKit subscription in sandbox
 - Confirm privacy answers in App Store Connect
-- Remove all Stripe purchase links from the native iOS build
+- Confirm no Stripe purchase links are present in the native iOS build
