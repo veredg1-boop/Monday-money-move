@@ -8,6 +8,9 @@
 - Monday reminder logic in native iOS source
 - Native SwiftUI application source
 - StoreKit subscription manager scaffold
+- App Store subscription screen with first-move trial gate
+- Restore Purchases control
+- Subscription status and purchase error messaging
 - Draft App Store title, subtitle, description, keywords, and category
 - Privacy policy, terms, and support page
 - Master brand icon artwork
@@ -29,6 +32,5 @@
 - Test reminder permission on device
 - Test local history persistence
 - Configure and test StoreKit subscription in sandbox
-- Add Restore Purchases control
 - Confirm privacy answers in App Store Connect
 - Remove all Stripe purchase links from the native iOS build
