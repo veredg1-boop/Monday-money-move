@@ -22,6 +22,12 @@ https://veredg1-boop.github.io/Monday-money-move/
 ## Longer bio
 **A one-minute weekly check-in that turns financial overwhelm into one clear, manageable action. Build better money habits one move at a time.**
 
+## Required safety line — use at the bottom whenever space allows
+**No bank login, bank account connection, routing number, account number, or other banking credentials are required to use Monday Money Move. Never send or share your banking credentials with Monday Money Move.**
+
+Short version for bios or tight spaces:
+**No bank login or bank-account connection required.**
+
 ## Launch post — master version
 **What if getting better with money started with just one move?**
 
@@ -31,6 +37,8 @@ No spreadsheets. No jargon. No judgment.
 
 Try the beta and see what your next move could be:
 https://veredg1-boop.github.io/Monday-money-move/
+
+**No bank login or bank-account connection required. Never share banking credentials with Monday Money Move.**
 
 ## Instagram / Threads caption
 Money feels easier when you know the next move.
@@ -43,6 +51,8 @@ One move at a time.
 Try the beta ↓
 https://veredg1-boop.github.io/Monday-money-move/
 
+**No bank login or bank-account connection required.**
+
 #MondayMoneyMove #MoneyHabits #PersonalFinance #FinancialWellness #MoneyGoals
 
 ## Facebook post
@@ -53,6 +63,8 @@ Monday Money Move was built to make the next step simpler. In about one minute, 
 Try the beta here:
 https://veredg1-boop.github.io/Monday-money-move/
 
+**No bank login or bank-account connection required. Never share banking credentials with Monday Money Move.**
+
 ## X / Twitter post
 Stop wondering what to do with your money next.
 
@@ -60,6 +72,8 @@ Monday Money Move gives you one focused financial action each week — in about 
 
 Try the beta:
 https://veredg1-boop.github.io/Monday-money-move/
+
+**No bank login or bank-account connection required.**
 
 ## LinkedIn company post
 Introducing Monday Money Move — a simple weekly financial decision tool designed to turn money overwhelm into one clear, manageable action.
@@ -69,9 +83,12 @@ Users complete a short check-in, choose their current priority, and receive one 
 The beta is now live:
 https://veredg1-boop.github.io/Monday-money-move/
 
+**No bank login or bank-account connection required. Never share banking credentials with Monday Money Move.**
+
 ## TikTok profile bio
 **One smarter money move each week 💸**
 **Simple. Clear. No jargon.**
+**No bank connection required.**
 
 ## TikTok first video script
 **Hook:** "If you never know what money move to make next, this is for you."
@@ -80,13 +97,17 @@ https://veredg1-boop.github.io/Monday-money-move/
 
 **CTA:** "Try the beta — link in bio."
 
+**Safety close:** "You never need to connect a bank account or share bank login information to use it."
+
 ## YouTube channel description
 Monday Money Move helps you make one smarter financial decision each week. Short, practical guidance for debt, savings, spending, investing, and better money habits — without jargon or overwhelm.
 
 Try the beta: https://veredg1-boop.github.io/Monday-money-move/
 
+**No bank login or bank-account connection required. Never share banking credentials with Monday Money Move.**
+
 ## Pinterest profile description
-Simple weekly money actions for debt, savings, spending, investing, and better financial habits. One smarter move each week.
+Simple weekly money actions for debt, savings, spending, investing, and better financial habits. One smarter move each week. **No bank connection required.**
 
 ## First five content ideas
 1. **One Money Move Monday** — a simple weekly action under $25.
@@ -112,5 +133,7 @@ Primary promise: Help users identify one clear financial action to take now.
 
 Tone: calm, encouraging, practical, nonjudgmental, simple.
 
-## Important launch rule
-Do not promise individualized financial, investment, tax, credit, accounting, or legal advice. Keep all public copy educational and general.
+## Important launch rules
+- Do not promise individualized financial, investment, tax, credit, accounting, or legal advice. Keep all public copy educational and general.
+- Never ask users for bank passwords, bank usernames, account numbers, routing numbers, debit-card PINs, or links to personal bank accounts.
+- State clearly wherever practical that Monday Money Move does not require a bank login or bank-account connection.
