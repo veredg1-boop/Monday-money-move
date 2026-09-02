@@ -11,6 +11,8 @@
 - App Store subscription screen with first-move trial gate
 - Restore Purchases control
 - Subscription status and purchase error messaging
+- Native subscription product ID prepared: com.mondaymoneymove.monthly
+- Native iOS purchase flow verified to use Apple StoreKit rather than Stripe
 - Draft App Store title, subtitle, description, keywords, and category
 - Privacy policy, terms, and support page
 - Master brand icon artwork
@@ -27,7 +29,7 @@
 - Apple identity and legal-authority verification
 - $99 annual Apple Developer membership purchase
 - App Store Connect app record
-- In-App Purchase product: com.mondaymoneymove.monthly
+- Create the App Store Connect auto-renewable subscription using product ID: com.mondaymoneymove.monthly
 - Banking and tax agreements before paid proceeds
 - Final Xcode archive, device testing, screenshots, and App Review submission
 
@@ -37,4 +39,3 @@
 - Test local history persistence
 - Configure and test StoreKit subscription in sandbox
 - Confirm privacy answers in App Store Connect
-- Confirm no Stripe purchase links are present in the native iOS build
