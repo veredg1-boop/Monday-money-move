@@ -43,7 +43,7 @@ struct ContentView: View {
         switch screen {
         case .home: home
         case .goal: question("What would make the biggest difference right now?", options: [("Pay down debt","debt"),("Build my savings","save"),("Stop overspending","spend"),("Invest more consistently","invest")]) { goal=$0; screen = .pace }
-        case .pace: question("What feels realistic this week?", options: [("A small step under $25","small"),("A focused step from $25–$100","medium"),("A bigger step over $100","large")]) { pace=$0; screen = .style }
+        case .pace: question("What level of move feels right this week?", options: [("A simple move — up to $100","small"),("A meaningful move — $100–$500","medium"),("A stronger move — $500–$2,500","large"),("A significant move — $2,500+","xlarge")]) { pace=$0; screen = .style }
         case .style: question("What kind of action would help most?", options: [("Set it up automatically","automatic"),("Take one action today","once"),("Review and make a decision","review")]) { recommendation = move(for: goal, pace: pace, style: $0); screen = .result }
         case .result: resultCard
         case .history: historyCard
@@ -141,9 +141,9 @@ struct ContentView: View {
                 Text("Payment will be charged to your Apple Account. The subscription renews automatically unless canceled at least 24 hours before the end of the current period. Manage or cancel in Apple Account settings.")
                     .font(.footnote).foregroundStyle(.secondary)
                 HStack(spacing: 18) {
-                    Link("Privacy", destination: URL(string: "https://veredg1-boop.github.io/Monday-money-move/privacy.html")!)
-                    Link("Terms", destination: URL(string: "https://veredg1-boop.github.io/Monday-money-move/terms.html")!)
-                    Link("Support", destination: URL(string: "https://veredg1-boop.github.io/Monday-money-move/support.html")!)
+                    Link("Privacy", destination: URL(string: "https://mondaymoneymove.com/privacy.html")!)
+                    Link("Terms", destination: URL(string: "https://mondaymoneymove.com/terms.html")!)
+                    Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
                 }.font(.footnote)
                 Button("Not now") { screen = .home }.font(.footnote)
             }
@@ -169,7 +169,7 @@ struct ContentView: View {
     }
 
     private func move(for goal:String, pace:String, style:String) -> String {
-        let amount = pace == "small" ? "a small amount" : pace == "medium" ? "$25–$100" : "more than $100"
+        let amount = pace == "small" ? "up to $100" : pace == "medium" ? "$100–$500" : pace == "large" ? "$500–$2,500" : "$2,500 or more"
         switch (goal, style) {
         case ("debt","automatic"): return "Schedule an automatic extra payment of \(amount) toward your highest-interest balance."
         case ("debt","review"): return "List your debts by interest rate and choose the highest-interest balance to target first."
