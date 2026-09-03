@@ -31,11 +31,17 @@ money,weekly,budget,savings,debt,spending,investing,goals,habits,finance
 Primary: Finance
 Secondary: Productivity
 
+## Marketing URL
+https://mondaymoneymove.com
+
 ## Support URL
-To be created on the company domain.
+https://mondaymoneymove.com/support.html
 
 ## Privacy Policy URL
-To be moved to the company domain.
+https://mondaymoneymove.com/privacy.html
+
+## Terms of Use URL
+https://mondaymoneymove.com/terms.html
 
 ## Subscription
 Product ID: com.mondaymoneymove.monthly
