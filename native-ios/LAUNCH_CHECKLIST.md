@@ -26,6 +26,9 @@
 - Verified D-U-N-S Number for Monday Money Move LLC: 149930128
 - In-app Settings, subscription management, data deletion, and Important Information screens
 - Investment recommendations removed from the version 1 experience
+- Supabase organization and project connection authorized for ChatGPT
+- Supabase project status verified as healthy
+- Supabase RLS and database security reviewed; security advisors report no remaining findings
 
 ## External setup required before submission
 - Company-domain email address
@@ -43,7 +46,3 @@
 - Test local history persistence
 - Configure and test StoreKit subscription in sandbox
 - Confirm privacy answers in App Store Connect
-
-## Temporarily blocked
-- Supabase dashboard connector authentication failed repeatedly; do not retry until the connection issue is resolved.
-
