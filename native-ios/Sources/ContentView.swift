@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @EnvironmentObject private var store: MoveStore
@@ -7,8 +8,10 @@ struct ContentView: View {
     @State private var goal = ""
     @State private var pace = ""
     @State private var recommendation = ""
+    @State private var reminderMessage: String?
+    @State private var showDeleteConfirmation = false
 
-    enum Screen { case home, goal, pace, style, result, history, membership }
+    enum Screen { case home, goal, pace, style, result, history, membership, settings, information }
 
     var body: some View {
         NavigationStack {
@@ -42,29 +45,45 @@ struct ContentView: View {
     @ViewBuilder private var content: some View {
         switch screen {
         case .home: home
-        case .goal: question("What would make the biggest difference right now?", options: [("Pay down debt","debt"),("Build my savings","save"),("Stop overspending","spend"),("Invest more consistently","invest")]) { goal=$0; screen = .pace }
+        case .goal: question("What would make the biggest difference right now?", options: [("Pay down debt","debt"),("Build my savings","save"),("Reduce unnecessary spending","spend"),("Get my finances organized","organize")]) { goal=$0; screen = .pace }
         case .pace: question("What level of move feels right this week?", options: [("A simple move — up to $100","small"),("A meaningful move — $100–$500","medium"),("A stronger move — $500–$2,500","large"),("A significant move — $2,500+","xlarge")]) { pace=$0; screen = .style }
         case .style: question("What kind of action would help most?", options: [("Set it up automatically","automatic"),("Take one action today","once"),("Review and make a decision","review")]) { recommendation = move(for: goal, pace: pace, style: $0); screen = .result }
         case .result: resultCard
         case .history: historyCard
         case .membership: membershipCard
+        case .settings: settingsCard
+        case .information: informationCard
         }
     }
 
     private var home: some View {
         card {
             VStack(alignment: .leading, spacing: 18) {
-                Text("FOUNDING MEMBER BETA").font(.caption.bold()).foregroundStyle(Color(red: 0.09, green: 0.31, blue: 0.24))
+                Text("YOUR WEEKLY MONEY CHECK-IN").font(.caption.bold()).foregroundStyle(Color(red: 0.09, green: 0.31, blue: 0.24))
                 Text("Stop wondering what to do with your money next.").font(.system(size: 38, weight: .bold, design: .rounded))
                 Text("A one-minute weekly check-in that turns financial overwhelm into one clear, manageable action.").font(.title3).foregroundStyle(.secondary)
                 primaryButton(store.moves.isEmpty || purchases.isSubscribed ? "Start This Week’s Check-In" : "Unlock This Week’s Move") {
                     screen = store.moves.isEmpty || purchases.isSubscribed ? .goal : .membership
                 }
-                Button("Remind me every Monday") { Task { await store.requestWeeklyReminder() } }.font(.subheadline.bold())
+                Button("Remind me every Monday") {
+                    Task {
+                        let enabled = await store.requestWeeklyReminder()
+                        reminderMessage = enabled ? "Monday reminder scheduled for 9:00 AM." : "Reminders are turned off. You can enable them in iPhone Settings."
+                    }
+                }.font(.subheadline.bold())
+                if let reminderMessage {
+                    Text(reminderMessage).font(.footnote).foregroundStyle(.secondary)
+                }
                 if !store.moves.isEmpty {
                     Text("\(store.completedCount) of \(store.moves.count) weekly moves completed")
                         .font(.subheadline).foregroundStyle(.secondary)
                 }
+                Divider()
+                HStack {
+                    Button("Important Information") { screen = .information }
+                    Spacer()
+                    Button("Settings") { screen = .settings }
+                }.font(.footnote.bold())
             }
         }
     }
@@ -126,7 +145,9 @@ struct ContentView: View {
                 Text(purchases.monthlyProduct?.displayPrice ?? "$9.99")
                     .font(.system(size: 38, weight: .bold, design: .rounded))
                 + Text(" / month").font(.headline).foregroundColor(.secondary)
-                primaryButton(purchases.isWorking ? "Please wait…" : "Start Membership") {
+                Text("Start with a 7-day free trial, then continue for \(purchases.monthlyProduct?.displayPrice ?? "$9.99") per month. The trial is available to eligible new subscribers. Cancel anytime in Apple Account settings.")
+                    .font(.subheadline).foregroundStyle(.secondary)
+                primaryButton(purchases.isWorking ? "Please wait…" : "Start 7-Day Free Trial") {
                     Task {
                         await purchases.purchase()
                         if purchases.isSubscribed { screen = .goal }
@@ -146,6 +167,48 @@ struct ContentView: View {
                     Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
                 }.font(.footnote)
                 Button("Not now") { screen = .home }.font(.footnote)
+            }
+        }
+    }
+
+    private var settingsCard: some View {
+        card {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("SETTINGS").font(.caption.bold()).foregroundStyle(.secondary)
+                Text("Your app, your control").font(.title.bold())
+                Text("Your weekly answers and progress are stored only on this device. Monday Money Move does not connect to your bank account.")
+                    .foregroundStyle(.secondary)
+                Button("Manage Apple Subscription") {
+                    if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                Button("Delete My App Data", role: .destructive) { showDeleteConfirmation = true }
+                Button("Back") { screen = .home }
+            }
+            .alert("Delete all app data?", isPresented: $showDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) { store.clearAll(); screen = .home }
+            } message: {
+                Text("This permanently removes your saved moves and progress from this iPhone.")
+            }
+        }
+    }
+
+    private var informationCard: some View {
+        card {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("IMPORTANT INFORMATION").font(.caption.bold()).foregroundStyle(.secondary)
+                Text("Educational guidance—not financial advice").font(.title.bold())
+                Text("Monday Money Move provides general educational guidance based only on the choices you enter. It does not provide individualized financial, investment, tax, legal, accounting, credit, or insurance advice, and it does not guarantee results.")
+                Text("You remain responsible for reviewing each suggestion and deciding whether it is appropriate for you. For advice about your individual circumstances, consult a qualified professional.")
+                    .foregroundStyle(.secondary)
+                HStack(spacing: 18) {
+                    Link("Privacy", destination: URL(string: "https://mondaymoneymove.com/privacy.html")!)
+                    Link("Terms", destination: URL(string: "https://mondaymoneymove.com/terms.html")!)
+                    Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
+                }.font(.footnote)
+                Button("Back") { screen = .home }
             }
         }
     }
@@ -180,9 +243,10 @@ struct ContentView: View {
         case ("spend","automatic"): return "Set a spending alert and protect \(amount) from unnecessary spending."
         case ("spend","review"): return "Review your recurring charges and choose one expense to reduce or cancel."
         case ("spend",_): return "Pause one unnecessary purchase worth \(amount) and redirect it to your priority."
-        case ("invest","automatic"): return "Schedule a recurring investment of \(amount) on payday."
-        case ("invest","review"): return "Review diversification, fees, and risk before choosing your next investment."
-        default: return "Invest \(amount) consistently instead of waiting for the perfect time."
+        case ("organize","automatic"): return "Schedule a 15-minute weekly money check-in and gather your key balances in one place."
+        case ("organize","review"): return "Review your accounts and list the three financial priorities that matter most this month."
+        default: return "Gather your bills and balances, then choose one financial task to complete this week."
         }
     }
 }
+

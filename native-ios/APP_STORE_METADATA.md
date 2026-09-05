@@ -12,11 +12,11 @@ Turn financial overwhelm into one clear, manageable action in about a minute.
 ## Description
 Monday Money Move helps you focus on the next financial action that matters most.
 
-Complete a quick weekly check-in, choose what you want to improve, and receive one focused money move for the week. Save your move, mark it complete, review your history, and build momentum through small, consistent decisions.
+Complete a quick weekly check-in, choose what you want to improve, and receive one focused money move for the week. Save your move, mark it complete, review your history, and build momentum through small, consistent decisions. No bank connection is required.
 
 Features:
 - One-minute weekly money check-in
-- Focused actions for debt, savings, spending, and investing
+- Focused actions for debt, savings, spending, and financial organization
 - Weekly progress history
 - Monday reminders
 - Private on-device storage
@@ -25,11 +25,16 @@ Features:
 Monday Money Move provides general educational guidance only. It does not provide individualized financial, investment, tax, legal, accounting, or credit advice.
 
 ## Keywords
-money,weekly,budget,savings,debt,spending,investing,goals,habits,finance
+money,weekly,budget,savings,debt,spending,goals,habits,finance,organize
 
 ## Category
 Primary: Finance
 Secondary: Productivity
+
+## App privacy draft
+Data collection: No data collected
+Tracking: No
+User content and progress: Stored locally on the user's device
 
 ## Marketing URL
 https://mondaymoneymove.com
@@ -47,3 +52,4 @@ https://mondaymoneymove.com/terms.html
 Product ID: com.mondaymoneymove.monthly
 Display name: Monday Money Move Monthly
 Price target: $9.99/month
+

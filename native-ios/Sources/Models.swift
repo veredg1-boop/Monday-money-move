@@ -43,10 +43,10 @@ final class MoveStore: ObservableObject {
         }
     }
 
-    func requestWeeklyReminder() async {
+    func requestWeeklyReminder() async -> Bool {
         let center = UNUserNotificationCenter.current()
         let granted = (try? await center.requestAuthorization(options: [.alert, .sound, .badge])) ?? false
-        guard granted else { return }
+        guard granted else { return false }
         var date = DateComponents()
         date.weekday = 2
         date.hour = 9
@@ -55,7 +55,12 @@ final class MoveStore: ObservableObject {
         content.body = "Take one minute to choose this week’s smartest money move."
         content.sound = .default
         let request = UNNotificationRequest(identifier: "weekly-money-move", content: content, trigger: UNCalendarNotificationTrigger(dateMatching: date, repeats: true))
-        try? await center.add(request)
+        do {
+            try await center.add(request)
+            return true
+        } catch {
+            return false
+        }
     }
 }
 
@@ -124,3 +129,4 @@ final class PurchaseManager: ObservableObject {
         }
     }
 }
+

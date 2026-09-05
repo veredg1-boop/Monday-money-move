@@ -20,13 +20,15 @@
 - Master brand icon artwork
 - Final 1024×1024 opaque PNG App Store icon in the AppIcon asset catalog
 - Apple privacy manifest for UserDefaults (CA92.1)
-- iPhone and iPad target configuration
+- iPhone-only launch target configuration
 - Removed unneeded Apple Pay entitlement from native target
 - Stripe payout bank account connected (USD account ending 2463)
+- Verified D-U-N-S Number for Monday Money Move LLC: 149930128
+- In-app Settings, subscription management, data deletion, and Important Information screens
+- Investment recommendations removed from the version 1 experience
 
 ## External setup required before submission
 - Company-domain email address
-- D-U-N-S Number for Monday Money Move LLC (request under review)
 - Apple Developer Program organization enrollment
 - Apple identity and legal-authority verification
 - $99 annual Apple Developer membership purchase
@@ -44,3 +46,4 @@
 
 ## Temporarily blocked
 - Supabase dashboard connector authentication failed repeatedly; do not retry until the connection issue is resolved.
+
