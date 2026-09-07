@@ -21,6 +21,11 @@ jobs:
       - name: Generate Xcode project
         working-directory: native-ios
         run: xcodegen generate
+      - name: Upload generated Xcode project
+        uses: actions/upload-artifact@v4
+        with:
+          name: MondayMoneyMove-xcodeproj
+          path: native-ios/MondayMoneyMove.xcodeproj
       - name: Build for iPhone Simulator
         working-directory: native-ios
         run: >-
