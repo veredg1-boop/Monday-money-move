@@ -29,6 +29,9 @@
 - Supabase organization and project connection authorized for ChatGPT
 - Supabase project status verified as healthy
 - Supabase RLS and database security reviewed; security advisors report no remaining findings
+- Compiled successfully with current Xcode and launched in the iPhone 17 Pro simulator
+- Core weekly flow tested in simulator: check-in, recommendation, save, and mark complete
+- Membership screen opened successfully in simulator
 
 ## External setup required before submission
 - Company-domain email address
@@ -41,7 +44,6 @@
 - Final Xcode archive, device testing, screenshots, and App Review submission
 
 ## Product checks before review
-- Compile with current Xcode
 - Test reminder permission on device
 - Test local history persistence
 - Configure and test StoreKit subscription in sandbox
