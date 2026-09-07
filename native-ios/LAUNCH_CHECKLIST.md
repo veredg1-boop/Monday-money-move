@@ -32,6 +32,8 @@
 - Compiled successfully with current Xcode and launched in the iPhone 17 Pro simulator
 - Core weekly flow tested in simulator: check-in, recommendation, save, and mark complete
 - Membership screen opened successfully in simulator
+- App Review notes, age-rating guidance, copyright, and screenshot plan prepared
+- App Store Connect subscription setup instructions prepared
 
 ## External setup required before submission
 - Company-domain email address
@@ -40,8 +42,9 @@
 - $99 annual Apple Developer membership purchase
 - App Store Connect app record
 - Create the App Store Connect auto-renewable subscription using product ID: com.mondaymoneymove.monthly
+- Configure the 7-day introductory free trial for eligible new subscribers
 - Apple banking and tax agreements before paid App Store proceeds
-- Final Xcode archive, device testing, screenshots, and App Review submission
+- Final Xcode archive, physical-device testing, clean App Store screenshots, and App Review submission
 
 ## Product checks before review
 - Test reminder permission on device
