@@ -1,6 +1,15 @@
 import SwiftUI
 import UIKit
 
+private enum BrandPalette {
+    static let ink = Color(red: 0.09, green: 0.13, blue: 0.12)
+    static let green = Color(red: 0.086, green: 0.208, blue: 0.184)
+    static let midGreen = Color(red: 0.224, green: 0.459, blue: 0.384)
+    static let mint = Color(red: 0.875, green: 0.945, blue: 0.914)
+    static let cream = Color(red: 0.969, green: 0.957, blue: 0.933)
+    static let choice = Color(red: 0.953, green: 0.961, blue: 0.953)
+}
+
 struct ContentView: View {
     @EnvironmentObject private var store: MoveStore
     @EnvironmentObject private var purchases: PurchaseManager
@@ -16,7 +25,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(colors: [Color(red: 0.97, green: 0.96, blue: 0.93), Color(red: 0.92, green: 0.96, blue: 0.94)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+                LinearGradient(colors: [BrandPalette.cream, BrandPalette.mint.opacity(0.72)], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: 18) {
                         brand
@@ -26,13 +35,14 @@ struct ContentView: View {
                     .padding()
                 }
             }
-            .tint(.green)
+            .foregroundStyle(BrandPalette.ink)
+            .tint(BrandPalette.midGreen)
         }
     }
 
     private var brand: some View {
         HStack(spacing: 12) {
-            Text("M").font(.title2.bold()).foregroundStyle(.white).frame(width: 48, height: 48).background(Color(red: 0.09, green: 0.21, blue: 0.18)).clipShape(RoundedRectangle(cornerRadius: 15))
+            Text("M").font(.title2.bold()).foregroundStyle(.white).frame(width: 48, height: 48).background(BrandPalette.green).clipShape(RoundedRectangle(cornerRadius: 15))
             VStack(alignment: .leading) {
                 Text("Monday Money Move").font(.headline)
                 Text("One smarter move each week").font(.caption).foregroundStyle(.secondary)
@@ -59,7 +69,7 @@ struct ContentView: View {
     private var home: some View {
         card {
             VStack(alignment: .leading, spacing: 18) {
-                Text("YOUR WEEKLY MONEY CHECK-IN").font(.caption.bold()).foregroundStyle(Color(red: 0.09, green: 0.31, blue: 0.24))
+                Text("YOUR WEEKLY MONEY CHECK-IN").font(.caption.bold()).foregroundStyle(BrandPalette.midGreen)
                 Text("Stop wondering what to do with your money next.").font(.system(size: 38, weight: .bold, design: .rounded))
                 Text("A one-minute weekly check-in that turns financial overwhelm into one clear, manageable action.").font(.title3).foregroundStyle(.secondary)
                 primaryButton(store.moves.isEmpty || purchases.isSubscribed ? "Start This Week’s Check-In" : "Unlock This Week’s Move") {
@@ -96,7 +106,7 @@ struct ContentView: View {
                 ForEach(options, id: \.1) { item in
                     Button { action(item.1) } label: {
                         HStack { Text(item.0); Spacer(); Image(systemName:"arrow.right") }
-                            .padding().frame(maxWidth:.infinity).background(Color(.secondarySystemBackground)).clipShape(RoundedRectangle(cornerRadius:14))
+                            .padding().frame(maxWidth:.infinity).background(BrandPalette.choice).clipShape(RoundedRectangle(cornerRadius:14))
                     }.buttonStyle(.plain)
                 }
             }
@@ -108,7 +118,7 @@ struct ContentView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("YOUR MONDAY MONEY MOVE").font(.caption.bold()).foregroundStyle(.secondary)
                 Text("One focused action for this week").font(.title.bold())
-                Text(recommendation).font(.title3.bold()).padding().background(Color(red:0.97,green:0.95,blue:0.90)).clipShape(RoundedRectangle(cornerRadius:14))
+                Text(recommendation).font(.title3.bold()).padding().background(BrandPalette.cream).clipShape(RoundedRectangle(cornerRadius:14))
                 primaryButton("Save My Move") { store.add(recommendation); screen = .home }
             }
         }
@@ -147,6 +157,13 @@ struct ContentView: View {
                 + Text(" / month").font(.headline).foregroundColor(.secondary)
                 Text("Start with a 7-day free trial, then continue for \(purchases.monthlyProduct?.displayPrice ?? "$9.99") per month. The trial is available to eligible new subscribers. Cancel anytime in Apple Account settings.")
                     .font(.subheadline).foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 10) {
+                    Label("Today: begin your free trial", systemImage: "checkmark.circle.fill")
+                    Label("Day 7: subscription begins at \(purchases.monthlyProduct?.displayPrice ?? "$9.99") per month", systemImage: "calendar")
+                    Label("Cancel anytime in Apple Account settings", systemImage: "gearshape")
+                }
+                .font(.subheadline)
+                .foregroundStyle(BrandPalette.green)
                 primaryButton(purchases.isWorking ? "Please wait…" : "Start 7-Day Free Trial") {
                     Task {
                         await purchases.purchase()
@@ -224,11 +241,11 @@ struct ContentView: View {
     }
 
     private func card<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        content().padding(24).frame(maxWidth:.infinity,alignment:.leading).background(.white).clipShape(RoundedRectangle(cornerRadius:24)).shadow(color:.black.opacity(0.07),radius:18,y:8)
+        content().padding(24).frame(maxWidth:.infinity,alignment:.leading).background(.white.opacity(0.97)).clipShape(RoundedRectangle(cornerRadius:24)).overlay(RoundedRectangle(cornerRadius:24).stroke(.white.opacity(0.84), lineWidth: 1)).shadow(color:BrandPalette.green.opacity(0.10),radius:18,y:8)
     }
 
     private func primaryButton(_ title:String, action:@escaping()->Void) -> some View {
-        Button(action:action) { Text(title).font(.headline).frame(maxWidth:.infinity).padding().foregroundStyle(.white).background(Color(red:0.09,green:0.21,blue:0.18)).clipShape(RoundedRectangle(cornerRadius:15)) }
+        Button(action:action) { Text(title).font(.headline).frame(maxWidth:.infinity).padding().foregroundStyle(.white).background(BrandPalette.green).clipShape(RoundedRectangle(cornerRadius:15)).shadow(color: BrandPalette.green.opacity(0.18), radius: 9, y: 4) }
     }
 
     private func move(for goal:String, pace:String, style:String) -> String {
@@ -249,4 +266,3 @@ struct ContentView: View {
         }
     }
 }
-
