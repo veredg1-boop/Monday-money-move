@@ -11,9 +11,13 @@ on:
       - "native-ios/**"
       - ".github/workflows/ios-build.yml"
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: macos-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
@@ -26,13 +30,32 @@ jobs:
         with:
           name: MondayMoneyMove-xcodeproj
           path: native-ios/MondayMoneyMove.xcodeproj
-      - name: Build for iPhone Simulator
+      - name: Select an available iPhone simulator
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
+          phones = [d for runtime, group in devices.items() if "iOS" in runtime for d in group if "iPhone" in d["name"]]
+          if not phones:
+              raise SystemExit("No iPhone simulator is installed")
+          with open(os.environ["GITHUB_ENV"], "a") as env:
+              env.write("IOS_SIMULATOR_ID=" + phones[0]["udid"] + "\n")
+          PY
+      - name: Build and test the iPhone app
         working-directory: native-ios
         run: >-
           xcodebuild
           -project MondayMoneyMove.xcodeproj
           -scheme MondayMoneyMove
-          -sdk iphonesimulator
-          -destination 'generic/platform=iOS Simulator'
+          -destination "platform=iOS Simulator,id=$IOS_SIMULATOR_ID"
+          -parallel-testing-enabled NO
+          -resultBundlePath TestResults.xcresult
           CODE_SIGNING_ALLOWED=NO
-          build
+          test
+      - name: Upload test results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MondayMoneyMove-test-results
+          path: native-ios/TestResults.xcresult
+          if-no-files-found: ignore
