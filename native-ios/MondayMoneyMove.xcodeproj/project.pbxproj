@@ -8,22 +8,61 @@
 
 /* Begin PBXBuildFile section */
 		03C5ADB8B6EC0166B62445FA /* MondayMoneyMoveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A953FED35562494E9DC5054D /* MondayMoneyMoveApp.swift */; };
+		5994F689AE0533F065E4E976 /* MoveStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0802C577FD949DCF5169E8 /* MoveStoreTests.swift */; };
 		67CE41D9A67768F0D18CEB85 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 52257302AA134D81BEF0E9A1 /* PrivacyInfo.xcprivacy */; };
+		89928F144D21DF826002E767 /* ReleaseFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7654B35F448E47BAC493B0 /* ReleaseFlowTests.swift */; };
 		8A724611250D22891CFC51D0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D1F6A09FD12CDC3E02D4DC4 /* ContentView.swift */; };
 		8DCE662534BCE77A50EBF2BA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F97FAAE17FBACEB63566F18 /* Models.swift */; };
 		BC11A3C1D7F8DECF2AF4ABE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AD34684EF2E416D8660907E /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9AD6080137F494B385A58728 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D856ACEB59B938FB42A6FEF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DC747AD4F1CB736074DDA574;
+			remoteInfo = MondayMoneyMove;
+		};
+		A721EFC32B0257655CBBE12A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D856ACEB59B938FB42A6FEF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DC747AD4F1CB736074DDA574;
+			remoteInfo = MondayMoneyMove;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0A7654B35F448E47BAC493B0 /* ReleaseFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseFlowTests.swift; sourceTree = "<group>"; };
 		1D1F6A09FD12CDC3E02D4DC4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		27DBA4C2B638F3B6C008C67D /* MondayMoneyMove.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MondayMoneyMove.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52257302AA134D81BEF0E9A1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		5F46EAE9635C878EB38E80EC /* MondayMoneyMoveTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MondayMoneyMoveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F97FAAE17FBACEB63566F18 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		8AD34684EF2E416D8660907E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A953FED35562494E9DC5054D /* MondayMoneyMoveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MondayMoneyMoveApp.swift; sourceTree = "<group>"; };
+		AF219430C2A31A501FBFB406 /* MondayMoneyMoveUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MondayMoneyMoveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB0802C577FD949DCF5169E8 /* MoveStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		025484ABE0E6E094F5CB8F19 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				BB0802C577FD949DCF5169E8 /* MoveStoreTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		7790F18DBCCF43D1B8AE495A /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				0A7654B35F448E47BAC493B0 /* ReleaseFlowTests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
 		962BCCFB20F638E3E326D94D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -40,6 +79,8 @@
 			isa = PBXGroup;
 			children = (
 				962BCCFB20F638E3E326D94D /* Sources */,
+				025484ABE0E6E094F5CB8F19 /* Tests */,
+				7790F18DBCCF43D1B8AE495A /* UITests */,
 				F308C0E6848DF57E880670A8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,6 +89,8 @@
 			isa = PBXGroup;
 			children = (
 				27DBA4C2B638F3B6C008C67D /* MondayMoneyMove.app */,
+				5F46EAE9635C878EB38E80EC /* MondayMoneyMoveTests.xctest */,
+				AF219430C2A31A501FBFB406 /* MondayMoneyMoveUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,6 +98,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		55EBD18B9D3EAE31C8AE204A /* MondayMoneyMoveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED3748198684DE52DF8AF128 /* Build configuration list for PBXNativeTarget "MondayMoneyMoveTests" */;
+			buildPhases = (
+				B75AF6104ABDF809733E942E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4857F465C9B0ECE15C6068BD /* PBXTargetDependency */,
+			);
+			name = MondayMoneyMoveTests;
+			packageProductDependencies = (
+			);
+			productName = MondayMoneyMoveTests;
+			productReference = 5F46EAE9635C878EB38E80EC /* MondayMoneyMoveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DC747AD4F1CB736074DDA574 /* MondayMoneyMove */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8FCFF45F5433D8EC88106F11 /* Build configuration list for PBXNativeTarget "MondayMoneyMove" */;
@@ -73,6 +134,24 @@
 			productReference = 27DBA4C2B638F3B6C008C67D /* MondayMoneyMove.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F62FBEA5A4D96AEECBE414C1 /* MondayMoneyMoveUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BC443DC0445DBD18FAE01D8 /* Build configuration list for PBXNativeTarget "MondayMoneyMoveUITests" */;
+			buildPhases = (
+				691E9F2ABDD509D84554C85B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D941BB159CE9D4246C285808 /* PBXTargetDependency */,
+			);
+			name = MondayMoneyMoveUITests;
+			packageProductDependencies = (
+			);
+			productName = MondayMoneyMoveUITests;
+			productReference = AF219430C2A31A501FBFB406 /* MondayMoneyMoveUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,8 +161,15 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					55EBD18B9D3EAE31C8AE204A = {
+						ProvisioningStyle = Automatic;
+					};
 					DC747AD4F1CB736074DDA574 = {
 						ProvisioningStyle = Automatic;
+					};
+					F62FBEA5A4D96AEECBE414C1 = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = DC747AD4F1CB736074DDA574;
 					};
 				};
 			};
@@ -102,6 +188,8 @@
 			projectRoot = "";
 			targets = (
 				DC747AD4F1CB736074DDA574 /* MondayMoneyMove */,
+				55EBD18B9D3EAE31C8AE204A /* MondayMoneyMoveTests */,
+				F62FBEA5A4D96AEECBE414C1 /* MondayMoneyMoveUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -129,9 +217,55 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		691E9F2ABDD509D84554C85B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89928F144D21DF826002E767 /* ReleaseFlowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B75AF6104ABDF809733E942E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5994F689AE0533F065E4E976 /* MoveStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4857F465C9B0ECE15C6068BD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DC747AD4F1CB736074DDA574 /* MondayMoneyMove */;
+			targetProxy = A721EFC32B0257655CBBE12A /* PBXContainerItemProxy */;
+		};
+		D941BB159CE9D4246C285808 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DC747AD4F1CB736074DDA574 /* MondayMoneyMove */;
+			targetProxy = 9AD6080137F494B385A58728 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		566698DD9446F88B4D12411C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mondaymoneymove.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MondayMoneyMove.app/MondayMoneyMove";
+			};
+			name = Debug;
+		};
 		723A962E11CBA732A6D0E829 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -149,6 +283,40 @@
 				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		8468D8B0FFA5DC1BC86267C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mondaymoneymove.app.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MondayMoneyMove;
+			};
+			name = Debug;
+		};
+		C131A895A78C406F92FDF9F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mondaymoneymove.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MondayMoneyMove.app/MondayMoneyMove";
 			};
 			name = Release;
 		};
@@ -232,6 +400,23 @@
 			};
 			name = Debug;
 		};
+		D75AD3CC9D774DFF46F4035F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mondaymoneymove.app.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MondayMoneyMove;
+			};
+			name = Release;
+		};
 		E6DCAA0C190CCE0835E2BD8B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -302,6 +487,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3BC443DC0445DBD18FAE01D8 /* Build configuration list for PBXNativeTarget "MondayMoneyMoveUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8468D8B0FFA5DC1BC86267C8 /* Debug */,
+				D75AD3CC9D774DFF46F4035F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		43B0C05FB348FBEBF7E56EB3 /* Build configuration list for PBXProject "MondayMoneyMove" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -316,6 +510,15 @@
 			buildConfigurations = (
 				CDD9F182D3292E1EE0B4BAC2 /* Debug */,
 				723A962E11CBA732A6D0E829 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ED3748198684DE52DF8AF128 /* Build configuration list for PBXNativeTarget "MondayMoneyMoveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				566698DD9446F88B4D12411C /* Debug */,
+				C131A895A78C406F92FDF9F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

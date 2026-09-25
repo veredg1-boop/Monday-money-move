@@ -1,5 +1,7 @@
 # Monday Money Move — App Store Listing Draft
 
+Prepared for native iPhone version 1.0.0. These are copy-ready fields, not confirmation of what is currently saved in App Store Connect. Verify the subscription and URLs before submission.
+
 ## App name
 Monday Money Move
 
@@ -22,7 +24,12 @@ Features:
 - Private on-device storage
 - Clear educational guidance without jargon
 
+Try your first money move without a subscription. A Monday Money Move Monthly subscription unlocks additional check-ins. The intended US price is $9.99 per month, with a 7-day free trial for eligible new subscribers. The price and trial displayed in the app come from Apple and may vary by storefront. Payment is charged to your Apple Account. The subscription renews automatically unless canceled at least 24 hours before the end of the current period. Manage or cancel your subscription in Apple Account settings.
+
 Monday Money Move provides general educational guidance only. It does not provide individualized financial, investment, tax, legal, accounting, or credit advice.
+
+Privacy Policy: https://mondaymoneymove.com/privacy.html
+Terms of Use: https://mondaymoneymove.com/terms.html
 
 ## Keywords
 money,weekly,budget,savings,debt,spending,goals,habits,finance,organize
@@ -40,7 +47,9 @@ Expected rating: 4+ (subject to completion of Apple’s age-rating questionnaire
 ## App privacy draft
 Data collection: No data collected
 Tracking: No
-User content and progress: Stored locally on the user's device
+Saved moves and progress: Stored locally on the user's device. Check-in selections are used in memory to generate the action.
+
+This draft is based on the current native source: no login, analytics, ads, bank connections, or third-party SDKs. StoreKit handles payments. Confirm the final binary and public policy match these answers before publishing the label.
 
 ## Marketing URL
 https://mondaymoneymove.com
@@ -73,7 +82,7 @@ To review the core experience:
 4. Tap “Mark Complete” to verify local progress tracking.
 5. Tap the chart icon to review saved history.
 
-All check-in answers, saved moves, and completion history are stored locally on the device. The app uses StoreKit 2 for the auto-renewable subscription. “Restore Purchases” is available on the membership screen. Privacy, Terms, and Support links are displayed on that screen.
+Check-in selections are processed on the device; saved moves and completion history are stored locally. The first saved move is available without subscribing. Additional check-ins require an active monthly subscription. After saving the first move, tap “Unlock This Week’s Move” to reach the membership screen. The app uses StoreKit 2 for the auto-renewable subscription. “Restore Purchases” is available on the membership screen. Privacy, Terms, and Support links are displayed on that screen. Settings includes subscription management and deletion of saved app data.
 
 ## Screenshot plan and overlay copy
 Use clean screenshots from the largest required iPhone display size, without the Xcode or Simulator frame.
