@@ -30,17 +30,24 @@ jobs:
         with:
           name: MondayMoneyMove-xcodeproj
           path: native-ios/MondayMoneyMove.xcodeproj
-      - name: Select an available iPhone simulator
+      - name: Select a large iPhone for App Store screenshots
         run: |
           python3 - <<'PY'
           import json, os, subprocess
           devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
-          phones = [d for runtime, group in devices.items() if "iOS" in runtime for d in group if "iPhone" in d["name"]]
+          phones = [d for runtime, group in devices.items() if "iOS" in runtime for d in group if d["name"] in ("iPhone 17 Pro Max", "iPhone 16 Pro Max")]
           if not phones:
-              raise SystemExit("No iPhone simulator is installed")
+              raise SystemExit("A 6.9-inch iPhone Pro Max simulator is required for release screenshots")
+          phones.sort(key=lambda d: d["name"], reverse=True)
+          print("Screenshot device:", phones[0]["name"])
           with open(os.environ["GITHUB_ENV"], "a") as env:
               env.write("IOS_SIMULATOR_ID=" + phones[0]["udid"] + "\n")
           PY
+      - name: Prepare screenshot status bar
+        run: |
+          xcrun simctl boot "$IOS_SIMULATOR_ID"
+          xcrun simctl bootstatus "$IOS_SIMULATOR_ID" -b
+          xcrun simctl status_bar "$IOS_SIMULATOR_ID" override --time "9:41" --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
       - name: Build and test the iPhone app
         working-directory: native-ios
         run: >-
@@ -52,6 +59,25 @@ jobs:
           -resultBundlePath TestResults.xcresult
           CODE_SIGNING_ALLOWED=NO
           test
+      - name: Export screenshot attachments
+        working-directory: native-ios
+        run: xcrun xcresulttool export attachments --path TestResults.xcresult --output-path AppStoreScreenshots
+      - name: Upload App Store screenshot candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: MondayMoneyMove-AppStoreScreenshots
+          path: native-ios/AppStoreScreenshots
+          if-no-files-found: error
+      - name: Check Release build for an iPhone device
+        working-directory: native-ios
+        run: >-
+          xcodebuild
+          -project MondayMoneyMove.xcodeproj
+          -scheme MondayMoneyMove
+          -configuration Release
+          -destination "generic/platform=iOS"
+          CODE_SIGNING_ALLOWED=NO
+          build
       - name: Upload test results and screenshots
         if: always()
         uses: actions/upload-artifact@v4
