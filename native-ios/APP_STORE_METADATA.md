@@ -28,8 +28,8 @@ Try your first money move without a subscription. A Monday Money Move Monthly su
 
 Monday Money Move provides general educational guidance only. It does not provide individualized financial, investment, tax, legal, accounting, or credit advice.
 
-Privacy Policy: https://mondaymoneymove.com/privacy.html
-Terms of Use: https://mondaymoneymove.com/terms.html
+Privacy Policy: https://www.mondaymoneymove.com/privacy-policy
+Terms of Use: https://www.mondaymoneymove.com/terms
 
 ## Keywords
 money,weekly,budget,savings,debt,spending,goals,habits,finance,organize
@@ -55,13 +55,13 @@ This draft is based on the current native source: no login, analytics, ads, bank
 https://mondaymoneymove.com
 
 ## Support URL
-https://mondaymoneymove.com/support.html
+https://www.mondaymoneymove.com/contact
 
 ## Privacy Policy URL
-https://mondaymoneymove.com/privacy.html
+https://www.mondaymoneymove.com/privacy-policy
 
 ## Terms of Use URL
-https://mondaymoneymove.com/terms.html
+https://www.mondaymoneymove.com/terms
 
 ## Subscription
 Product ID: com.mondaymoneymove.monthly
