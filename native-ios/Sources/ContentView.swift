@@ -29,7 +29,7 @@ struct ContentView: View {
                 ScrollView {
                     VStack(spacing: 18) {
                         brand
-                        if let current = store.current { currentMove(current) }
+                        if screen == .home, let current = store.current { currentMove(current) }
                         content
                     }
                     .padding()
@@ -37,6 +37,9 @@ struct ContentView: View {
             }
             .foregroundStyle(BrandPalette.ink)
             .tint(BrandPalette.midGreen)
+            .onChange(of: purchases.isSubscribed) { _, subscribed in
+                if subscribed && screen == .membership { screen = .goal }
+            }
         }
     }
 
@@ -49,6 +52,7 @@ struct ContentView: View {
             }
             Spacer()
             Button { screen = .history } label: { Image(systemName: "chart.bar.xaxis") }
+                .accessibilityLabel("View progress")
         }
     }
 
@@ -109,6 +113,13 @@ struct ContentView: View {
                             .padding().frame(maxWidth:.infinity).background(BrandPalette.choice).clipShape(RoundedRectangle(cornerRadius:14))
                     }.buttonStyle(.plain)
                 }
+                Button("Back") {
+                    switch screen {
+                    case .style: screen = .pace
+                    case .pace: screen = .goal
+                    default: screen = .home
+                    }
+                }
             }
         }
     }
@@ -120,6 +131,7 @@ struct ContentView: View {
                 Text("One focused action for this week").font(.title.bold())
                 Text(recommendation).font(.title3.bold()).padding().background(BrandPalette.cream).clipShape(RoundedRectangle(cornerRadius:14))
                 primaryButton("Save My Move") { store.add(recommendation); screen = .home }
+                Button("Back") { screen = .style }
             }
         }
     }
@@ -152,26 +164,37 @@ struct ContentView: View {
                 Text("Keep your momentum going").font(.title.bold())
                 Text("Get a fresh, focused money move each week, save your progress, and use Monday reminders.")
                     .font(.title3).foregroundStyle(.secondary)
-                Text(purchases.monthlyProduct?.displayPrice ?? "$9.99")
-                    .font(.system(size: 38, weight: .bold, design: .rounded))
-                + Text(" / month").font(.headline).foregroundColor(.secondary)
-                Text("Start with a 7-day free trial, then continue for \(purchases.monthlyProduct?.displayPrice ?? "$9.99") per month. The trial is available to eligible new subscribers. Cancel anytime in Apple Account settings.")
-                    .font(.subheadline).foregroundStyle(.secondary)
-                VStack(alignment: .leading, spacing: 10) {
-                    Label("Today: begin your free trial", systemImage: "checkmark.circle.fill")
-                    Label("Day 7: subscription begins at \(purchases.monthlyProduct?.displayPrice ?? "$9.99") per month", systemImage: "calendar")
-                    Label("Cancel anytime in Apple Account settings", systemImage: "gearshape")
+                if let product = purchases.monthlyProduct {
+                    Text("\(product.displayPrice) / month")
+                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                    if purchases.canOfferFreeTrial {
+                        Text("Start with a 7-day free trial, then \(product.displayPrice) per month. Cancel anytime in Apple Account settings.")
+                            .font(.subheadline).foregroundStyle(.secondary)
+                    } else {
+                        Text("Subscribe for \(product.displayPrice) per month. Cancel anytime in Apple Account settings.")
+                            .font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    primaryButton(purchases.isWorking ? "Please wait…" : (purchases.canOfferFreeTrial ? "Start 7-Day Free Trial" : "Subscribe Monthly")) {
+                        Task {
+                            await purchases.purchase()
+                            if purchases.isSubscribed { screen = .goal }
+                        }
+                    }
+                    .disabled(purchases.isWorking || purchases.isLoadingProducts)
+                } else if purchases.isLoadingProducts {
+                    ProgressView("Loading membership…")
+                } else {
+                    Text("Membership details are unavailable right now.")
+                        .foregroundStyle(.secondary)
+                    Button("Try Again") { Task { await purchases.loadProducts() } }
+                        .disabled(purchases.isWorking)
                 }
-                .font(.subheadline)
-                .foregroundStyle(BrandPalette.green)
-                primaryButton(purchases.isWorking ? "Please wait…" : "Start 7-Day Free Trial") {
+                Button("Restore Purchases") {
                     Task {
-                        await purchases.purchase()
+                        await purchases.restore()
                         if purchases.isSubscribed { screen = .goal }
                     }
                 }
-                .disabled(purchases.isWorking)
-                Button("Restore Purchases") { Task { await purchases.restore() } }
                     .disabled(purchases.isWorking)
                 if let message = purchases.statusMessage {
                     Text(message).font(.footnote).foregroundStyle(.secondary)
@@ -179,9 +202,9 @@ struct ContentView: View {
                 Text("Payment will be charged to your Apple Account. The subscription renews automatically unless canceled at least 24 hours before the end of the current period. Manage or cancel in Apple Account settings.")
                     .font(.footnote).foregroundStyle(.secondary)
                 HStack(spacing: 18) {
-                    Link("Privacy", destination: URL(string: "https://mondaymoneymove.com/privacy.html")!)
-                    Link("Terms", destination: URL(string: "https://mondaymoneymove.com/terms.html")!)
-                    Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
+                    Link("Privacy", destination: URL(string: "https://www.mondaymoneymove.com/privacy-policy")!)
+                    Link("Terms", destination: URL(string: "https://www.mondaymoneymove.com/terms")!)
+                    Link("Support", destination: URL(string: "https://www.mondaymoneymove.com/contact")!)
                 }.font(.footnote)
                 Button("Not now") { screen = .home }.font(.footnote)
             }
@@ -221,9 +244,9 @@ struct ContentView: View {
                 Text("You remain responsible for reviewing each suggestion and deciding whether it is appropriate for you. For advice about your individual circumstances, consult a qualified professional.")
                     .foregroundStyle(.secondary)
                 HStack(spacing: 18) {
-                    Link("Privacy", destination: URL(string: "https://mondaymoneymove.com/privacy.html")!)
-                    Link("Terms", destination: URL(string: "https://mondaymoneymove.com/terms.html")!)
-                    Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
+                    Link("Privacy", destination: URL(string: "https://www.mondaymoneymove.com/privacy-policy")!)
+                    Link("Terms", destination: URL(string: "https://www.mondaymoneymove.com/terms")!)
+                    Link("Support", destination: URL(string: "https://www.mondaymoneymove.com/contact")!)
                 }.font(.footnote)
                 Button("Back") { screen = .home }
             }
