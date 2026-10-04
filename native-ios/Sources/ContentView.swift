@@ -202,9 +202,9 @@ struct ContentView: View {
                 Text("Payment will be charged to your Apple Account. The subscription renews automatically unless canceled at least 24 hours before the end of the current period. Manage or cancel in Apple Account settings.")
                     .font(.footnote).foregroundStyle(.secondary)
                 HStack(spacing: 18) {
-                    Link("Privacy", destination: URL(string: "https://mondaymoneymove.com/privacy.html")!)
-                    Link("Terms", destination: URL(string: "https://mondaymoneymove.com/terms.html")!)
-                    Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
+                    Link("Privacy", destination: URL(string: "https://www.mondaymoneymove.com/privacy-policy")!)
+                    Link("Terms", destination: URL(string: "https://www.mondaymoneymove.com/terms")!)
+                    Link("Support", destination: URL(string: "https://www.mondaymoneymove.com/contact")!)
                 }.font(.footnote)
                 Button("Not now") { screen = .home }.font(.footnote)
             }
@@ -244,9 +244,9 @@ struct ContentView: View {
                 Text("You remain responsible for reviewing each suggestion and deciding whether it is appropriate for you. For advice about your individual circumstances, consult a qualified professional.")
                     .foregroundStyle(.secondary)
                 HStack(spacing: 18) {
-                    Link("Privacy", destination: URL(string: "https://mondaymoneymove.com/privacy.html")!)
-                    Link("Terms", destination: URL(string: "https://mondaymoneymove.com/terms.html")!)
-                    Link("Support", destination: URL(string: "https://mondaymoneymove.com/support.html")!)
+                    Link("Privacy", destination: URL(string: "https://www.mondaymoneymove.com/privacy-policy")!)
+                    Link("Terms", destination: URL(string: "https://www.mondaymoneymove.com/terms")!)
+                    Link("Support", destination: URL(string: "https://www.mondaymoneymove.com/contact")!)
                 }.font(.footnote)
                 Button("Back") { screen = .home }
             }
