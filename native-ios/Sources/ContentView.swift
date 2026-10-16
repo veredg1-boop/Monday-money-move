@@ -1,5 +1,7 @@
 import SwiftUI
 import UIKit
+import StoreKit
+import WebKit
 
 private enum BrandPalette {
     static let ink = Color(red: 0.09, green: 0.13, blue: 0.12)
@@ -10,7 +12,7 @@ private enum BrandPalette {
     static let choice = Color(red: 0.953, green: 0.961, blue: 0.953)
 }
 
-struct ContentView: View {
+struct LegacyWeeklyCheckInView: View {
     @EnvironmentObject private var store: MoveStore
     @EnvironmentObject private var purchases: PurchaseManager
     @State private var screen: Screen = .home
@@ -263,6 +265,292 @@ struct ContentView: View {
         case ("organize","automatic"): return "Schedule a 15-minute weekly money check-in and gather your key balances in one place."
         case ("organize","review"): return "Review your accounts and list the three financial priorities that matter most this month."
         default: return "Gather your bills and balances, then choose one financial task to complete this week."
+        }
+    }
+}
+
+
+/// The hosted site is the visual and feature source of truth for the iOS app.
+/// StoreKit remains native; the site receives only the resulting entitlement state.
+struct ContentView: View {
+    @EnvironmentObject private var store: MoveStore
+    @EnvironmentObject private var purchases: PurchaseManager
+    @State private var loadError: String?
+    @State private var reloadKey = UUID()
+    @State private var showNativeFallback = false
+
+    var body: some View {
+        ZStack {
+            MondayMoneyMoveWebView(
+                purchases: purchases,
+                moves: store.moves,
+                reloadKey: reloadKey,
+                onError: { loadError = $0 }
+            )
+            .id(reloadKey)
+            .ignoresSafeArea()
+
+            if let loadError {
+                VStack(spacing: 14) {
+                    Text("Monday Money Move couldn’t load")
+                        .font(.headline)
+                    Text(loadError)
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                    Button("Try Again") {
+                        loadError = nil
+                        reloadKey = UUID()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    Button("Open the built-in weekly check-in") {
+                        showNativeFallback = true
+                    }
+                }
+                .padding(28)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(red: 0.969, green: 0.957, blue: 0.933))
+            }
+        }
+        .preferredColorScheme(.light)
+        .sheet(isPresented: $showNativeFallback) {
+            LegacyWeeklyCheckInView()
+                .environmentObject(store)
+                .environmentObject(purchases)
+        }
+    }
+}
+
+private struct MondayMoneyMoveWebView: UIViewRepresentable {
+    @ObservedObject var purchases: PurchaseManager
+    let moves: [MoneyMove]
+    let reloadKey: UUID
+    let onError: (String?) -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(purchases: purchases, onError: onError)
+    }
+
+    func makeUIView(context: Context) -> WKWebView {
+        let content = WKUserContentController()
+        content.add(context.coordinator, name: "mmmNative")
+        content.addUserScript(WKUserScript(
+            source: Self.nativeBridgeScript,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        ))
+
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = content
+        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.navigationDelegate = context.coordinator
+        webView.allowsBackForwardNavigationGestures = true
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        context.coordinator.webView = webView
+        context.coordinator.moves = moves
+        context.coordinator.loadSite()
+        return webView
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        context.coordinator.webView = webView
+        context.coordinator.moves = moves
+        context.coordinator.onError = onError
+        context.coordinator.syncMembership()
+    }
+
+    private static let nativeBridgeScript = #"""
+    (() => {
+      let nativeState = 'checking';
+      const notify = () => window.dispatchEvent(new CustomEvent('mmm-membership', {
+        detail: { active: nativeState === 'active', state: nativeState }
+      }));
+      const nativeMembership = Object.freeze({
+        active: () => nativeState === 'active',
+        verify: async () => nativeState === 'active',
+        validReference: () => false,
+        get state() { return nativeState; },
+        get reference() { return ''; }
+      });
+      Object.defineProperty(window, 'MMMMembership', {
+        configurable: true,
+        enumerable: true,
+        get: () => nativeMembership,
+        set: () => {}
+      });
+      window.mmmSetNativeMembership = active => {
+        nativeState = active ? 'active' : 'inactive';
+        notify();
+        if (typeof window.render === 'function') window.render();
+      };
+      window.mmmSetNativeStatus = message => {
+        if (!message) return;
+        let status = document.getElementById('mmm-native-status');
+        if (!status) {
+          status = document.createElement('div');
+          status.id = 'mmm-native-status';
+          status.setAttribute('role', 'status');
+          status.setAttribute('aria-live', 'polite');
+          Object.assign(status.style, {
+            position: 'fixed', left: '16px', right: '16px', bottom: '18px',
+            zIndex: '2147483647', padding: '14px 18px', borderRadius: '14px',
+            background: '#16352f', color: '#fff', font: '600 15px -apple-system, sans-serif',
+            boxShadow: '0 8px 24px rgba(0,0,0,.18)'
+          });
+          document.body.append(status);
+        }
+        status.textContent = message;
+        clearTimeout(status.dismissTimer);
+        status.dismissTimer = setTimeout(() => status.remove(), 6000);
+      };
+      window.mmmImportNativeMovesFromBase64 = encoded => {
+        try {
+          const bytes = Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
+          const incoming = JSON.parse(new TextDecoder().decode(bytes));
+          const data = JSON.parse(localStorage.getItem('mmmData') || '{"current":null,"history":[]}');
+          if (!Array.isArray(data.history)) data.history = [];
+          const migrated = incoming.map(move => {
+            const date = new Date((move.createdAt + 978307200) * 1000).toLocaleDateString();
+            return { id: move.id, date, text: move.text, complete: move.completed };
+          });
+          for (const move of migrated.slice().reverse()) {
+            const exists = data.history.some(saved => saved.id === move.id || (saved.text === move.text && saved.date === move.date));
+            if (!exists) data.history.unshift(move);
+          }
+          if (!data.current && migrated.length) data.current = migrated[0];
+          localStorage.setItem('mmmData', JSON.stringify(data));
+          if (typeof window.render === 'function') window.render();
+        } catch (_) {}
+      };
+      const post = action => window.webkit.messageHandlers.mmmNative.postMessage(action);
+      document.addEventListener('click', event => {
+        const anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+        if (anchor) {
+          let url;
+          try { url = new URL(anchor.href, location.href); } catch (_) {}
+          if (url && url.hostname === 'buy.stripe.com') {
+            event.preventDefault(); event.stopImmediatePropagation(); post('purchase'); return;
+          }
+          if (url && url.pathname.endsWith('/restore.html')) {
+            event.preventDefault(); event.stopImmediatePropagation(); post('restore'); return;
+          }
+          if (url && url.pathname.endsWith('/support.html') && url.hash === '#cancel') {
+            event.preventDefault(); event.stopImmediatePropagation(); post('manage'); return;
+          }
+        }
+        const button = event.target && event.target.closest ? event.target.closest('button[onclick*="join("]') : null;
+        if (button) {
+          event.preventDefault(); event.stopImmediatePropagation();
+          post(nativeMembership.active() ? 'manage' : 'purchase');
+        }
+      }, true);
+      window.addEventListener('DOMContentLoaded', () => {
+        window.join = () => post(nativeMembership.active() ? 'manage' : 'purchase');
+      }, { once: true });
+    })();
+    """#
+
+    @MainActor
+    final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+        weak var webView: WKWebView?
+        let purchases: PurchaseManager
+        var moves: [MoneyMove] = []
+        var onError: (String?) -> Void
+
+        init(purchases: PurchaseManager, onError: @escaping (String?) -> Void) {
+            self.purchases = purchases
+            self.onError = onError
+        }
+
+        func loadSite() {
+            guard let url = URL(string: "https://veredg1-boop.github.io/Monday-money-move/") else { return }
+            webView?.load(URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 30))
+        }
+
+        func syncMembership() {
+            let active = purchases.isSubscribed ? "true" : "false"
+            let status = purchases.statusMessage.flatMap { try? JSONEncoder().encode($0) }
+                .flatMap { String(data: $0, encoding: .utf8) }
+            let statusCall = status.map { "window.mmmSetNativeStatus && window.mmmSetNativeStatus(\($0));" } ?? ""
+            webView?.evaluateJavaScript("window.mmmSetNativeMembership && window.mmmSetNativeMembership(\(active)); \(statusCall)")
+        }
+
+        private func migrateNativeMoves() {
+            guard !moves.isEmpty, let webView,
+                  let data = try? JSONEncoder().encode(moves) else { return }
+            let encoded = data.base64EncodedString()
+            webView.evaluateJavaScript("window.mmmImportNativeMovesFromBase64 && window.mmmImportNativeMovesFromBase64('\(encoded)');")
+        }
+
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            guard let action = message.body as? String else { return }
+            Task { @MainActor in
+                switch action {
+                case "purchase":
+                    await purchases.purchase()
+                    syncMembership()
+                case "restore":
+                    await purchases.restore()
+                    syncMembership()
+                case "manage":
+                    await manageSubscription()
+                default:
+                    break
+                }
+            }
+        }
+
+        private func manageSubscription() async {
+            guard let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene }).first else { return }
+            do {
+                try await AppStore.showManageSubscriptions(in: scene)
+                await purchases.refreshStatus()
+                syncMembership()
+            } catch {
+                purchases.statusMessage = "Apple subscription settings could not be opened. You can manage it in iPhone Settings."
+                syncMembership()
+            }
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            onError(nil)
+            syncMembership()
+            migrateNativeMoves()
+        }
+
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            onError(error.localizedDescription)
+        }
+
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            onError(error.localizedDescription)
+        }
+
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            guard let url = navigationAction.request.url else {
+                decisionHandler(.allow)
+                return
+            }
+            if url.host == "buy.stripe.com" {
+                Task { @MainActor in await purchases.purchase(); syncMembership() }
+                decisionHandler(.cancel)
+                return
+            }
+            if url.path.hasSuffix("/restore.html") {
+                Task { @MainActor in await purchases.restore(); syncMembership() }
+                decisionHandler(.cancel)
+                return
+            }
+            if url.path.hasSuffix("/support.html") && url.fragment == "cancel" {
+                Task { @MainActor in await manageSubscription() }
+                decisionHandler(.cancel)
+                return
+            }
+            decisionHandler(.allow)
         }
     }
 }
