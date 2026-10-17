@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import StoreKit
 import UserNotifications
 
@@ -13,9 +14,11 @@ struct MoneyMove: Codable, Identifiable {
 final class MoveStore: ObservableObject {
     @Published var moves: [MoneyMove] = [] { didSet { save() } }
     private let key = "mondayMoneyMoves"
+    private let defaults: UserDefaults
 
-    init() {
-        guard let data = UserDefaults.standard.data(forKey: key),
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        guard let data = defaults.data(forKey: key),
               let decoded = try? JSONDecoder().decode([MoneyMove].self, from: data)
         else { return }
         moves = decoded
@@ -39,7 +42,7 @@ final class MoveStore: ObservableObject {
 
     private func save() {
         if let data = try? JSONEncoder().encode(moves) {
-            UserDefaults.standard.set(data, forKey: key)
+            defaults.set(data, forKey: key)
         }
     }
 
@@ -69,15 +72,35 @@ final class PurchaseManager: ObservableObject {
     @Published var monthlyProduct: Product?
     @Published var isSubscribed = false
     @Published var isWorking = false
+    @Published var isLoadingProducts = false
+    @Published var canOfferFreeTrial = false
     @Published var statusMessage: String?
     private let productID = "com.mondaymoneymove.monthly"
 
     func loadProducts() async {
-        monthlyProduct = try? await Product.products(for: [productID]).first
+        guard !isLoadingProducts else { return }
+        isLoadingProducts = true
+        defer { isLoadingProducts = false }
+        statusMessage = nil
+        do {
+            let products = try await Product.products(for: [productID])
+            monthlyProduct = products.first { product in
+                product.id == productID && product.type == .autoRenewable &&
+                product.subscription?.subscriptionPeriod.unit == .month &&
+                product.subscription?.subscriptionPeriod.value == 1
+            }
+            if monthlyProduct == nil {
+                statusMessage = "Membership is currently unavailable. Please try again shortly."
+            }
+        } catch {
+            monthlyProduct = nil
+            statusMessage = "We couldn’t load membership details. Check your connection and try again."
+        }
         await refreshStatus()
     }
 
     func purchase() async {
+        guard !isWorking else { return }
         guard let product = monthlyProduct else {
             statusMessage = "The subscription is temporarily unavailable. Please try again."
             return
@@ -108,6 +131,7 @@ final class PurchaseManager: ObservableObject {
     }
 
     func restore() async {
+        guard !isWorking else { return }
         isWorking = true
         defer { isWorking = false }
         do {
@@ -120,13 +144,42 @@ final class PurchaseManager: ObservableObject {
     }
 
     func refreshStatus() async {
-        isSubscribed = false
+        var hasMembership = false
         for await entitlement in Transaction.currentEntitlements {
             if case .verified(let transaction) = entitlement,
-               transaction.productID == productID {
-                isSubscribed = true
+               transaction.productID == productID,
+               transaction.revocationDate == nil,
+               !transaction.isUpgraded {
+                hasMembership = true
             }
         }
+        isSubscribed = hasMembership
+        await refreshTrialEligibility()
+    }
+
+    // Keep pending approvals, renewals, and refunds in sync while the app is open.
+    // The view's structured task cancels this listener when its lifetime ends.
+    func observeTransactions() async {
+        for await update in Transaction.updates {
+            guard !Task.isCancelled else { return }
+            guard case .verified(let transaction) = update,
+                  transaction.productID == productID else { continue }
+            await refreshStatus()
+            await transaction.finish()
+        }
+    }
+
+    private func refreshTrialEligibility() async {
+        canOfferFreeTrial = false
+        guard !isSubscribed,
+              let subscription = monthlyProduct?.subscription,
+              let offer = subscription.introductoryOffer,
+              offer.paymentMode == .freeTrial,
+              offer.periodCount == 1 else { return }
+        let isSevenDays = (offer.period.unit == .day && offer.period.value == 7) ||
+            (offer.period.unit == .week && offer.period.value == 1)
+        guard isSevenDays else { return }
+        canOfferFreeTrial = await subscription.isEligibleForIntroOffer
     }
 }
 

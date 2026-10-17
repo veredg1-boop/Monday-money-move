@@ -1,53 +1,40 @@
-# Monday Money Move — App Store Launch Status
+# Monday Money Move — Apple release checkpoint
 
-## Completed
-- Public beta web app on mondaymoneymove.com
-- Company-owned product domain
-- Live support, privacy policy, and terms URLs on the company domain
-- Three-step weekly check-in
-- Saved weekly move and completion history
-- Local-device data storage
-- Monday reminder logic in native iOS source
-- Native SwiftUI application source
-- StoreKit subscription manager scaffold
-- App Store subscription screen with first-move trial gate
-- Restore Purchases control
-- Subscription status and purchase error messaging
-- Native subscription product ID prepared: com.mondaymoneymove.monthly
-- Native iOS purchase flow verified to use Apple StoreKit rather than Stripe
-- Draft App Store title, subtitle, description, keywords, category, and URLs
-- Privacy policy, terms, and support page
-- Master brand icon artwork
-- Final 1024×1024 opaque PNG App Store icon in the AppIcon asset catalog
-- Apple privacy manifest for UserDefaults (CA92.1)
-- iPhone-only launch target configuration
-- Removed unneeded Apple Pay entitlement from native target
-- Stripe payout bank account connected (USD account ending 2463)
-- Verified D-U-N-S Number for Monday Money Move LLC: 149930128
-- In-app Settings, subscription management, data deletion, and Important Information screens
-- Investment recommendations removed from the version 1 experience
-- Supabase organization and project connection authorized for ChatGPT
-- Supabase project status verified as healthy
-- Supabase RLS and database security reviewed; security advisors report no remaining findings
-- Compiled successfully with current Xcode and launched in the iPhone 17 Pro simulator
-- Core weekly flow tested in simulator: check-in, recommendation, save, and mark complete
-- Membership screen opened successfully in simulator
-- App Review notes, age-rating guidance, copyright, and screenshot plan prepared
-- App Store Connect subscription setup instructions prepared
+Updated September 25, 2026. This file records verified preparation, not an App Store submission.
 
-## External setup required before submission
-- Company-domain email address
-- Apple Developer Program organization enrollment
-- Apple identity and legal-authority verification
-- $99 annual Apple Developer membership purchase
-- App Store Connect app record
-- Create the App Store Connect auto-renewable subscription using product ID: com.mondaymoneymove.monthly
-- Configure the 7-day introductory free trial for eligible new subscribers
-- Apple banking and tax agreements before paid App Store proceeds
-- Final Xcode archive, physical-device testing, clean App Store screenshots, and App Review submission
+## Ready in the repository
+- Native SwiftUI iPhone app; bundle ID `com.mondaymoneymove.app`.
+- Version `1.0.0`, build `1`; raise the build number if Apple already has build 1.
+- App icon and UserDefaults privacy manifest.
+- StoreKit monthly product ID `com.mondaymoneymove.monthly`.
+- Eligible-trial messaging, restore purchases, and transaction updates.
+- App Store description, review instructions, and subscription setup copy in `APP_STORE_METADATA.md`.
+- Generated Xcode project and shared scheme included. XcodeGen is not needed to open, test, archive, or upload this project on a Mac.
+- Native CI run 35811725682 passed all 4 tests on September 23: persistence, deletion, corrupt saved data, and the full weekly check-in flow.
 
-## Product checks before review
-- Test reminder permission on device
-- Test local history persistence
-- Configure and test StoreKit subscription in sandbox
-- Confirm privacy answers in App Store Connect
+## Finish before Apple review
+- [ ] Sign in to App Store Connect and verify the existing Monday Money Move draft.
+- [ ] Confirm Paid Apps Agreement, tax forms, and payout banking status in Apple. Stripe banking does not complete Apple banking.
+- [ ] Create or verify the monthly StoreKit subscription and its 7-day introductory trial; attach it to the first app submission.
+- [ ] Test purchase, cancellation, restore, renewal/expiration, and revoked access using Apple's sandbox on the final build. The four core CI tests do not verify purchases.
+- [ ] Test Monday reminder permission and delivery on a physical iPhone.
+- [ ] Inspect the exported App Store screenshots and add them to the listing.
+- [ ] Verify the public support, privacy, and terms pages load and match the native app. Live reachability was not confirmed by web retrieval on September 25.
+- [ ] Complete privacy, age rating, pricing/availability, export compliance, and review-contact fields from verified facts.
+- [ ] Archive, sign, validate, and upload from Xcode using Monday Money Move LLC's team.
+- [ ] Wait for Apple to process the upload, select that build, and submit the version and subscription for review.
+
+## Build and screenshot evidence
+CI generates an Xcode project, runs the four native tests on a 6.9-inch iPhone simulator, exports screenshot candidates, and compiles a Release device build without signing. Unsigned CI output cannot be submitted to Apple. See the latest workflow run for current results.
+
+## Continue on the Mac
+1. Open `native-ios/MondayMoneyMove.xcodeproj` from this release branch/package.
+2. In Xcode > Settings > Accounts, sign in to the existing Apple Developer account.
+3. Select the MondayMoneyMove app target > Signing & Capabilities, keep automatic signing, and select the Monday Money Move LLC team.
+4. Select the MondayMoneyMove scheme and an iPhone destination for testing. Use Product > Test for the included tests.
+5. Test the subscription and reminder checks above on the final configuration.
+6. Select Any iOS Device (arm64), then Product > Archive.
+7. In Organizer, choose Validate App and resolve any errors, then Distribute App > App Store Connect > Upload.
+8. Return to the existing App Store Connect app record to choose the processed build and complete review submission.
+
+No Apple signing credentials are included in the repository. A passing simulator test or an accepted developer agreement is not proof that a build has been uploaded or submitted.

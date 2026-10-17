@@ -26,3 +26,32 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         TARGETED_DEVICE_FAMILY: "1"
+  MondayMoneyMoveTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: MondayMoneyMove
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.mondaymoneymove.app.tests
+  MondayMoneyMoveUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: MondayMoneyMove
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.mondaymoneymove.app.uitests
+schemes:
+  MondayMoneyMove:
+    build:
+      targets:
+        MondayMoneyMove: all
+    test:
+      targets:
+        - MondayMoneyMoveTests
+        - MondayMoneyMoveUITests
